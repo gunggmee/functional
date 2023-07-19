@@ -31,7 +31,7 @@ export function addItemToCart(name: string, price: number): void {
 
 export function deleteHandler(name: string) {
   shoppingCart = removeItemByName(shoppingCart, name);
-  var total = calcTotal(shoppingCart);
+  const total = calcTotal(shoppingCart);
   setCartTotalDom(total);
   updateShippingIcons(shoppingCart);
   updateTaxDom(total);
@@ -54,12 +54,7 @@ function makeCartItem(name: string, price: number, quantity: number): Item {
 }
 
 function calcTotal(cart: Cart): number {
-  var total = 0;
-  for (var i = 0; i < cart.length; i++) {
-    var item = cart[i];
-    total += item.price;
-  }
-  return total;
+  return cart.reduce((total, item) => total + item.price, 0);
 }
 
 function getsFreeShipping(cart: Cart): boolean {
