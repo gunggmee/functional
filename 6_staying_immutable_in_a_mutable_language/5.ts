@@ -37,40 +37,12 @@ export function deleteHandler(name: string) {
   updateTaxDom(total);
 }
 
-function setPrice(item: Item, price: number): Item {
-  return {...item, price};
+export function setPriceByName(cart: Cart, name: string, price: number): Cart {
+  return cart.map(item => item.name === name ? {...item, price} : item);
 }
 
-export function setPriceByName(
-  cart: Cart,
-  name: string,
-  price: number
-): Cart {
-  var cartCopy = cart.slice();
-  for (var i = 0; i < cartCopy.length; i++) {
-    if (cartCopy[i].name === name) {
-      cartCopy[i] = setPrice(cartCopy[i], price);
-    }
-  }
-  return cartCopy;
-}
-
-export function setQuantityByName(
-  cart: Cart,
-  name: string,
-  quantity: number
-): Cart {
-  var cartCopy = cart.slice();
-  for (var i = 0; i < cartCopy.length; i++) {
-    if (cartCopy[i].name === name) {
-      cartCopy[i] = setQuantity(cartCopy[i], quantity);
-    }
-  }
-  return cartCopy;
-}
-
-function setQuantity(item: Item, quantity: number): Item {
-  return {...item, quantity};
+export function setQuantityByName(cart: Cart, name: string, quantity: number): Cart {
+  return cart.map(item => item.name === name ? {...item, quantity} : item);
 }
 
 function addItem(cart: Cart, item: Item): Cart {
