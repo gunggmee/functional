@@ -21,12 +21,12 @@ const FREE_SHIPPING_THRESHOLD = 20;
 let shoppingCart: Cart = [];
 
 export function addItemToCart(name: string, price: number): void {
-  shoppingCart = addItem(shoppingCart, { name, price, quantity: 1 });
+  shoppingCart = [...shoppingCart, { name, price, quantity: 1 }];
   handleCartChange(shoppingCart);
 }
 
-export function deleteHandler(name: string) {
-  shoppingCart = removeItemByName(shoppingCart, name);
+export function removeItemFromCart(name: string) {
+  shoppingCart = shoppingCart.filter(item => item.name !== name)
   handleCartChange(shoppingCart);
 }
 
@@ -46,14 +46,6 @@ export function setQuantityByName(cart: Cart, name: string, quantity: number): C
   return cart.map(item => item.name === name ? {...item, quantity} : item);
 }
 
-function addItem(cart: Cart, item: Item): Cart {
-  return [...cart, item];
-}
-
-function makeCartItem(name: string, price: number, quantity: number): Item {
-  return { name, price, quantity };
-}
-
 function calcTotal(cart: Cart): number {
   return cart.reduce((total, item) => total + item.price, 0);
 }
@@ -70,16 +62,12 @@ function getBuyButtonsDom(): BuyButton[] {
   return [];
 }
 
-function removeItemByName(cart: Cart, name: string): Cart {
-  return cart.filter(item => item.name !== name)
-}
-
 /**
  * DOM 업데이트 액션
  */
 function updateShippingIcons(cart: Item[]): void {
   getBuyButtonsDom().forEach((button) => {
-    const hasFreeShipping = getsFreeShipping(addItem(cart, button.item));
+    const hasFreeShipping = getsFreeShipping([...cart, button.item]);
     setFreeShippingIcon(button, hasFreeShipping);
   });
 }
