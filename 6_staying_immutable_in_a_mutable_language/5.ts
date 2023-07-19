@@ -1,8 +1,15 @@
-type Cart = Item[];
+type Cart = CartItem[];
 
 type Item = {
   name: string;
   price: number;
+}
+
+type DisplayItem = Item & {
+  freeShipping: boolean
+}
+
+type CartItem = Item & {
   quantity: number;
 };
 
@@ -18,8 +25,10 @@ type BuyButton = {
 const TAX_RATE = 0.1;
 const FREE_SHIPPING_THRESHOLD = 20;
 
+let items: Item[] = [];
 let shoppingCart: Cart = [];
 
+// 액션
 export function addItemToCart(name: string, price: number): void {
   shoppingCart = [...shoppingCart, { name, price, quantity: 1 }];
   handleCartChange(shoppingCart);
@@ -33,11 +42,17 @@ export function removeItemFromCart(name: string) {
 function handleCartChange(cart: Cart) {
   const total = calcTotal(cart);
   const tax = calcTax(total);
-  setCartTotalDom(total);
-  updateShippingIcons(shoppingCart);
+  const displayItems: DisplayItem[] = items.map(item => ({
+    ...item,
+    freeShipping: getsFreeShipping([...cart, {...item, quantity: 1}])
+  }));
+  
+  updateCartTotalDom(total);
+  updateItemsDom(displayItems);
   updateTaxDom(tax);
 }
 
+// 계산
 export function setPriceByName(cart: Cart, name: string, price: number): Cart {
   return cart.map(item => item.name === name ? {...item, price} : item);
 }
@@ -58,24 +73,7 @@ function calcTax(amount: number): number {
   return amount * TAX_RATE;
 }
 
-function getBuyButtonsDom(): BuyButton[] {
-  return [];
-}
-
-/**
- * DOM 업데이트 액션
- */
-function updateShippingIcons(cart: Item[]): void {
-  getBuyButtonsDom().forEach((button) => {
-    const hasFreeShipping = getsFreeShipping([...cart, button.item]);
-    setFreeShippingIcon(button, hasFreeShipping);
-  });
-}
-function updateTaxDom(tax: number): void {
-  setTaxDom(tax);
-}
-function setCartTotalDom(total: number): void {}
-function setTaxDom(tax: number): void {}
-function setFreeShippingIcon(button: BuyButton, isShown: boolean): void {
-  isShown ? button.showFreeShippingIcon() : button.hideFreeShippingIcon();
-}
+// DOM 업데이트 액션
+function updateItemsDom(displayItems: DisplayItem[]): void {}
+function updateCartTotalDom(total: number): void {}
+function updateTaxDom(tax: number): void {}
