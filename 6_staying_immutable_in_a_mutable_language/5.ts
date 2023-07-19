@@ -1,3 +1,4 @@
+// 타입
 type Cart = CartItem[];
 
 type Item = {
@@ -19,9 +20,7 @@ type BuyButton = {
   hideFreeShippingIcon: () => void;
 };
 
-/**
- * 상수
- */
+// 상수 및 데이터
 const TAX_RATE = 0.1;
 const FREE_SHIPPING_THRESHOLD = 20;
 
@@ -42,25 +41,17 @@ export function removeItemFromCart(name: string) {
 function handleCartChange(cart: Cart) {
   const total = calcTotal(cart);
   const tax = calcTax(total);
-  const displayItems: DisplayItem[] = items.map(item => ({
+  const displayItems = items.map(item => ({
     ...item,
     freeShipping: getsFreeShipping([...cart, {...item, quantity: 1}])
   }));
-  
+
   updateCartTotalDom(total);
   updateItemsDom(displayItems);
   updateTaxDom(tax);
 }
 
 // 계산
-export function setPriceByName(cart: Cart, name: string, price: number): Cart {
-  return cart.map(item => item.name === name ? {...item, price} : item);
-}
-
-export function setQuantityByName(cart: Cart, name: string, quantity: number): Cart {
-  return cart.map(item => item.name === name ? {...item, quantity} : item);
-}
-
 function calcTotal(cart: Cart): number {
   return cart.reduce((total, item) => total + item.price, 0);
 }
