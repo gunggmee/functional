@@ -37,8 +37,8 @@ export function deleteHandler(name: string) {
   updateTaxDom(total);
 }
 
-export function setPrice(item: Item, newPrice: number): Item {
-  return objectSet(item, "price", newPrice);
+function setPrice(item: Item, price: number): Item {
+  return {...item, price};
 }
 
 export function setPriceByName(
@@ -69,12 +69,12 @@ export function setQuantityByName(
   return cartCopy;
 }
 
-export function setQuantity(item: Item, newQuantity: number): Item {
-  return objectSet(item, "quantity", newQuantity);
+function setQuantity(item: Item, quantity: number): Item {
+  return {...item, quantity};
 }
 
 function addItem(cart: Cart, item: Item): Cart {
-  return addElementLast(cart, item);
+  return [...cart, item];
 }
 
 function makeCartItem(name: string, price: number, quantity: number): Item {
@@ -103,53 +103,8 @@ function getBuyButtonsDom(): BuyButton[] {
 }
 
 function removeItemByName(cart: Cart, name: string): Cart {
-  var idx: number | null = null;
-  for (var i = 0; i < cart.length; i++) {
-    if (cart[i].name === name) {
-      idx = i;
-    }
-  }
-  if (idx !== null) return removeItems(cart, idx, 1);
-  return cart;
+  return cart.filter(item => item.name !== name)
 }
-
-/**
- * util 함수
- */
-function addElementLast<T>(array: T[], element: T): T[] {
-  var newArray = array.slice();
-  newArray.push(element);
-  return newArray;
-}
-
-function removeItems<T>(array: T[], idx: number, count: number): T[] {
-  var copy = array.slice();
-  copy.splice(idx, count);
-  return copy;
-}
-
-// 타입 붙이는 재미가 쏠쏠...
-function objectSet<
-  T extends Record<K, unknown>,
-  K extends keyof T,
-  V extends T[K]
->(object: T, key: K, value: V): T {
-  const copy = Object.assign({}, object);
-  copy[key] = value;
-  return copy;
-}
-
-// 타입 붙이는 재미가 쏠쏠...
-function objectDelete<T extends Record<K, unknown>, K extends keyof T>(
-  object: T,
-  key: K
-): Omit<T, K> {
-  const copy = Object.assign({}, object);
-  delete copy[key];
-  return copy;
-}
-// const x = { a: 1, b: 2 };
-// const y = objectDelete(x, 'a');
 
 /**
  * DOM 업데이트 액션
