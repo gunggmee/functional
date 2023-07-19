@@ -21,20 +21,21 @@ const FREE_SHIPPING_THRESHOLD = 20;
 let shoppingCart: Cart = [];
 
 export function addItemToCart(name: string, price: number): void {
-  const item = makeCartItem(name, price, 1);
-  shoppingCart = addItem(shoppingCart, item);
-  const total = calcTotal(shoppingCart);
-  setCartTotalDom(total);
-  updateShippingIcons(shoppingCart);
-  updateTaxDom(total);
+  shoppingCart = addItem(shoppingCart, { name, price, quantity: 1 });
+  handleCartChange(shoppingCart);
 }
 
 export function deleteHandler(name: string) {
   shoppingCart = removeItemByName(shoppingCart, name);
-  const total = calcTotal(shoppingCart);
+  handleCartChange(shoppingCart);
+}
+
+function handleCartChange(cart: Cart) {
+  const total = calcTotal(cart);
+  const tax = calcTax(total);
   setCartTotalDom(total);
   updateShippingIcons(shoppingCart);
-  updateTaxDom(total);
+  updateTaxDom(tax);
 }
 
 export function setPriceByName(cart: Cart, name: string, price: number): Cart {
@@ -82,8 +83,8 @@ function updateShippingIcons(cart: Item[]): void {
     setFreeShippingIcon(button, hasFreeShipping);
   });
 }
-function updateTaxDom(total: number): void {
-  setTaxDom(calcTax(total));
+function updateTaxDom(tax: number): void {
+  setTaxDom(tax);
 }
 function setCartTotalDom(total: number): void {}
 function setTaxDom(tax: number): void {}
