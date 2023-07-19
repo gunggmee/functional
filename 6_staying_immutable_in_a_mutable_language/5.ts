@@ -4,20 +4,14 @@ type Cart = CartItem[];
 type Item = {
   name: string;
   price: number;
-}
+};
 
 type DisplayItem = Item & {
-  freeShipping: boolean
-}
+  freeShipping: boolean;
+};
 
 type CartItem = Item & {
   quantity: number;
-};
-
-type BuyButton = {
-  item: Item;
-  showFreeShippingIcon: () => void;
-  hideFreeShippingIcon: () => void;
 };
 
 // 상수 및 데이터
@@ -34,16 +28,16 @@ export function addItemToCart(name: string, price: number): void {
 }
 
 export function removeItemFromCart(name: string) {
-  shoppingCart = shoppingCart.filter(item => item.name !== name)
+  shoppingCart = shoppingCart.filter((item) => item.name !== name);
   handleCartChange(shoppingCart);
 }
 
 function handleCartChange(cart: Cart) {
   const total = calcTotal(cart);
   const tax = calcTax(total);
-  const displayItems = items.map(item => ({
+  const displayItems = items.map((item) => ({
     ...item,
-    freeShipping: getsFreeShipping([...cart, {...item, quantity: 1}])
+    freeShipping: getsFreeShipping([...cart, { ...item, quantity: 1 }]),
   }));
 
   updateCartTotalDom(total);
@@ -65,6 +59,6 @@ function calcTax(amount: number): number {
 }
 
 // DOM 업데이트 액션
-function updateItemsDom(displayItems: DisplayItem[]): void {}
-function updateCartTotalDom(total: number): void {}
-function updateTaxDom(tax: number): void {}
+function updateItemsDom(_: DisplayItem[]): void {}
+function updateCartTotalDom(_: number): void {}
+function updateTaxDom(_: number): void {}
